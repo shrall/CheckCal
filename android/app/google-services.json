@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "975040990900",
+    "project_id": "checkcal-c459d",
+    "storage_bucket": "checkcal-c459d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:975040990900:android:85bb3dc74427c20de891e1",
+        "android_client_info": {
+          "package_name": "com.example.checkcal"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "975040990900-ilm5mo077hs90ppbldsvn8lnod8f4j03.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC6Iq1Mr8eeBS7BoxaVnqLnihFR4hburVU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "975040990900-ilm5mo077hs90ppbldsvn8lnod8f4j03.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
