@@ -28,8 +28,17 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
+  font_awesome_flutter: ^8.11.0
+  intl: ^0.16.1
+  auto_size_text: ^2.1.0
+  flutter_snake_navigationbar: ^0.5.0
   firebase_auth: ^0.14.0+5
   cloud_firestore: ^0.12.9+4
+  provider: ^5.0.0
+  email_validator: ^1.0.6
+  fluttertoast: ^7.1.8
+  flutter_spinkit: "^4.1.2"
+  page_transition: "^1.1.7+6"
 
 dev_dependencies:
   flutter_test:
@@ -62,6 +71,10 @@ flutter:
   # "family" key with the font family name, and a "fonts" key with a
   # list giving the asset and other descriptors for the font. For
   # example:
+  fonts:
+    - family: Isidora
+      fonts:
+        - asset: fonts/Isidora-Regular.otf
   # fonts:
   #   - family: Schyler
   #     fonts:
