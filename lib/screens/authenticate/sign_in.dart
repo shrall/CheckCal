@@ -4,15 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:checkcal/services/auth.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:page_transition/page_transition.dart';
+import 'package:checkcal/screens/authenticate/sign_up.dart';
 
 Color dark = Color.fromRGBO(13, 7, 20, 1);
 Color red = Color.fromRGBO(240, 66, 84, 1);
 Color orange = Color.fromRGBO(255, 146, 53, 1);
 
 class SignIn extends StatefulWidget {
-  final Function toggleView;
-  SignIn({this.toggleView});
-
   @override
   _SignInState createState() => _SignInState();
 }
@@ -164,9 +163,11 @@ class _SignInState extends State<SignIn> {
                         child: TextFormField(
                           onChanged: (val) {
                             {
-                              setState(() {
-                                password = val;
-                              });
+                              setState(
+                                () {
+                                  password = val;
+                                },
+                              );
                             }
                           },
                           autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -257,7 +258,6 @@ class _SignInState extends State<SignIn> {
                                 });
                               }
                             } else {
-                              //
                               Fluttertoast.showToast(
                                   msg: "Please check the fields!");
                             }
@@ -329,7 +329,13 @@ class _SignInState extends State<SignIn> {
                                 ),
                                 recognizer: TapGestureRecognizer()
                                   ..onTap = () {
-                                    widget.toggleView();
+                                    Navigator.pushReplacement(
+                                      context,
+                                      PageTransition(
+                                          child: SignUp(),
+                                          duration: Duration(milliseconds: 500),
+                                          type: PageTransitionType.fade),
+                                    );
                                   },
                               ),
                             ],

@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:checkcal/services/auth.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:page_transition/page_transition.dart';
+import 'package:checkcal/screens/authenticate/sign_in.dart';
 
 Color dark = Color.fromRGBO(13, 7, 20, 1);
 Color gray = Color.fromRGBO(44, 40, 50, 1);
@@ -11,9 +13,6 @@ Color red = Color.fromRGBO(240, 66, 84, 1);
 Color orange = Color.fromRGBO(255, 146, 53, 1);
 
 class SignUp extends StatefulWidget {
-  final Function toggleView;
-  SignUp({this.toggleView});
-
   @override
   _SignUpState createState() => _SignUpState();
 }
@@ -405,7 +404,13 @@ class _SignUpState extends State<SignUp> {
                                 ),
                                 recognizer: TapGestureRecognizer()
                                   ..onTap = () {
-                                    widget.toggleView();
+                                    Navigator.pushReplacement(
+                                        context,
+                                        PageTransition(
+                                            child: SignIn(),
+                                            duration:
+                                                Duration(milliseconds: 500),
+                                            type: PageTransitionType.fade));
                                   },
                               ),
                             ],
