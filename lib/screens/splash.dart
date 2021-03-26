@@ -10,10 +10,6 @@ Color dark = Color.fromRGBO(13, 7, 20, 1);
 Color gray = Color.fromRGBO(44, 40, 50, 1);
 Color red = Color.fromRGBO(240, 66, 84, 1);
 Color orange = Color.fromRGBO(255, 146, 53, 1);
-Color morning = Color.fromRGBO(232, 201, 111, 1);
-Color noon = Color.fromRGBO(78, 141, 233, 1);
-Color night = Color.fromRGBO(42, 66, 109, 1);
-Color twilight = Color.fromRGBO(112, 51, 90, 1);
 Color bun = Color.fromRGBO(237, 139, 6, 1);
 Color meat = Color.fromRGBO(136, 71, 46, 1);
 Color lettuce = Color.fromRGBO(145, 166, 29, 1);
@@ -35,7 +31,10 @@ class _SplashScreenState extends State<SplashScreen>
       () {
         Navigator.pushReplacement(
           context,
-          PageTransition(child: Wrapper(), type: PageTransitionType.fade),
+          PageTransition(
+            child: Wrapper(),
+            type: PageTransitionType.fade,
+          ),
         );
       },
     );
@@ -60,7 +59,6 @@ class _SplashScreenState extends State<SplashScreen>
     });
     _animation = Tween(begin: 0.0, end: 1.0).animate(
         CurvedAnimation(parent: _gradientController, curve: Curves.ease));
-
     _animation.addListener(() {
       setState(() {});
     });
