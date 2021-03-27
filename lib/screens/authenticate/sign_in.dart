@@ -12,6 +12,8 @@ Color red = Color.fromRGBO(240, 66, 84, 1);
 Color orange = Color.fromRGBO(255, 146, 53, 1);
 
 class SignIn extends StatefulWidget {
+  final Function toggleView;
+  SignIn({this.toggleView});
   @override
   _SignInState createState() => _SignInState();
 }
@@ -36,6 +38,7 @@ class _SignInState extends State<SignIn> {
 
   @override
   Widget build(BuildContext context) {
+    print('sign in built');
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
     return loading
@@ -332,9 +335,10 @@ class _SignInState extends State<SignIn> {
                                     Navigator.pushReplacement(
                                       context,
                                       PageTransition(
-                                          child: SignUp(),
-                                          duration: Duration(milliseconds: 500),
-                                          type: PageTransitionType.fade),
+                                        child: SignUp(),
+                                        duration: Duration(milliseconds: 500),
+                                        type: PageTransitionType.fade,
+                                      ),
                                     );
                                   },
                               ),

@@ -2,10 +2,10 @@ import 'package:checkcal/widgets/loading.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:email_validator/email_validator.dart';
-import 'package:checkcal/services/auth.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:checkcal/screens/authenticate/sign_in.dart';
+import 'package:checkcal/screens/authenticate/intro.dart';
 
 Color dark = Color.fromRGBO(13, 7, 20, 1);
 Color gray = Color.fromRGBO(44, 40, 50, 1);
@@ -18,7 +18,6 @@ class SignUp extends StatefulWidget {
 }
 
 class _SignUpState extends State<SignUp> {
-  final AuthService _auth = AuthService();
   final _formKey = GlobalKey<FormState>();
   bool loading = false;
 
@@ -319,19 +318,14 @@ class _SignUpState extends State<SignUp> {
                         child: ElevatedButton(
                           onPressed: () async {
                             if (_formKey.currentState.validate()) {
-                              setState(() {
-                                loading = true;
-                              });
-                              dynamic result =
-                                  await _auth.registerWithEmailAndPassword(
-                                      email, password);
-                              if (result == null) {
-                                setState(() {
-                                  error = 'Your email is already registered.';
-                                  Fluttertoast.showToast(msg: error);
-                                  loading = false;
-                                });
-                              }
+                              Navigator.push(
+                                context,
+                                PageTransition(
+                                  child:
+                                      Intro(email: email, password: password),
+                                  type: PageTransitionType.rightToLeftWithFade,
+                                ),
+                              );
                             } else {
                               Fluttertoast.showToast(
                                   msg: "Please check all the fields!");

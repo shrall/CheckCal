@@ -2,9 +2,8 @@ import 'package:checkcal/screens/wrapper.dart';
 import 'package:flutter/material.dart';
 import 'package:checkcal/widgets/splash_icon.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:checkcal/models/user.dart';
 import 'package:page_transition/page_transition.dart';
-import 'package:provider/provider.dart';
+// import 'package:provider/provider.dart';
 
 Color dark = Color.fromRGBO(13, 7, 20, 1);
 Color gray = Color.fromRGBO(44, 40, 50, 1);
@@ -63,6 +62,7 @@ class _SplashScreenState extends State<SplashScreen>
       setState(() {});
     });
     _gradientController.forward();
+    splashToHome();
   }
 
   @override
@@ -74,9 +74,9 @@ class _SplashScreenState extends State<SplashScreen>
 
   @override
   Widget build(BuildContext context) {
-    final user = Provider.of<User>(context);
-    splashToHome();
+    print('splash built');
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: Container(
         color: dark,
         child: Stack(

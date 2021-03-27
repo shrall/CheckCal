@@ -1,3 +1,15 @@
-import 'package:checkcal/services/database.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
-class DatabaseService {}
+class DatabaseService {
+  final String uid;
+  DatabaseService({this.uid});
+  final CollectionReference userCollection =
+      Firestore.instance.collection('users');
+
+  Future<void> updateUserData(String name, int limit) async {
+    return await userCollection.document(uid).setData({
+      'name': name,
+      'limit': limit,
+    });
+  }
+}

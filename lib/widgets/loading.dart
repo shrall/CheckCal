@@ -9,6 +9,7 @@ Color orange = Color.fromRGBO(255, 146, 53, 1);
 class Loading extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    print('loading built');
     return Container(
       color: dark,
       child: Center(
