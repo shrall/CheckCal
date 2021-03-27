@@ -6,6 +6,11 @@ import 'package:intl/intl.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter_snake_navigationbar/flutter_snake_navigationbar.dart';
 import 'package:provider/provider.dart';
+import 'package:checkcal/widgets/calendar_timeline.dart';
+import 'package:intl/date_symbol_data_local.dart';
+import 'package:expandable/expandable.dart';
+import 'package:page_transition/page_transition.dart';
+import 'package:checkcal/screens/home/edit_profile.dart';
 
 Color dark = Color.fromRGBO(13, 7, 20, 1);
 Color gray = Color.fromRGBO(44, 40, 50, 1);
@@ -27,6 +32,12 @@ class _HomeState extends State<Home> {
   int _selectedItemPosition = 0;
   SnakeShape snakeShape = SnakeShape.circle;
   Color selectedColor = Colors.grey[900];
+  DateTime _selectedDate = DateTime.now();
+  @override
+  void initState() {
+    super.initState();
+    initializeDateFormatting();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -45,12 +56,348 @@ class _HomeState extends State<Home> {
         bun: bun,
       ),
       Container(
-        color: Colors.red,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.all(16),
+              child: Text(
+                'Calorie Logbook',
+                style: TextStyle(
+                  color: Colors.grey[50],
+                  fontSize: 24,
+                ),
+              ),
+            ),
+            CalendarTimeline(
+              initialDate: _selectedDate,
+              firstDate: DateTime.now(),
+              lastDate: DateTime.now().add(Duration(days: 365)),
+              onDateSelected: (date) {
+                setState(() {
+                  _selectedDate = date;
+                  print(_selectedDate);
+                });
+              },
+              leftMargin: 20,
+              monthColor: Colors.white70,
+              dayColor: Colors.grey,
+              activeDayColor: Colors.white,
+              activeBackgroundDayColor: red,
+              dotsColor: Color(0xFF333A47),
+              locale: 'en',
+            ),
+            Divider(
+              color: Colors.grey[50],
+            ),
+            Container(
+                margin: EdgeInsets.only(left: 20, top: 10, bottom: 20),
+                child: Row(
+                  children: [
+                    Text(
+                      'Calorie Info',
+                      style: TextStyle(color: Colors.grey[50], fontSize: 24),
+                    ),
+                    SizedBox(
+                      width: 12,
+                    ),
+                    Text(
+                      '|',
+                      style: TextStyle(
+                        color: Colors.grey[50],
+                        fontSize: 30,
+                      ),
+                    ),
+                    SizedBox(
+                      width: 12,
+                    ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: <Text>[
+                        Text(
+                          "Total Intake",
+                          style: TextStyle(
+                              color: Colors.amber[400], fontFamily: 'Isidora'),
+                        ),
+                        Text(
+                          "930 kcal",
+                          style: TextStyle(
+                              color: Colors.grey[100], fontFamily: 'Isidora'),
+                        )
+                      ],
+                    ),
+                  ],
+                )),
+            Expanded(
+              child: ListView(
+                children: [
+                  Container(
+                    decoration: BoxDecoration(
+                      border: Border.symmetric(
+                        horizontal: BorderSide(
+                          style: BorderStyle.solid,
+                          color: Colors.grey[50],
+                          width: 1,
+                        ),
+                      ),
+                    ),
+                    child: Container(
+                      margin: EdgeInsets.only(left: 20, top: 5, bottom: 5),
+                      child: ExpandablePanel(
+                        theme: ExpandableThemeData(iconColor: Colors.grey[50]),
+                        header: Row(
+                          children: [
+                            Icon(
+                              FontAwesomeIcons.bacon,
+                              color: Colors.grey[50],
+                              size: 32,
+                            ),
+                            SizedBox(
+                              width: 20,
+                            ),
+                            Text(
+                              "Breakfast - ",
+                              style: TextStyle(
+                                color: Colors.grey[50],
+                                fontSize: 24,
+                              ),
+                            ),
+                            Text(
+                              "10 kcal",
+                              style: TextStyle(
+                                color: Colors.grey[50],
+                                fontSize: 24,
+                              ),
+                            )
+                          ],
+                        ),
+                        expanded: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Divider(
+                              color: Colors.grey,
+                              endIndent: 30,
+                            ),
+                            Text(
+                              "Egg - 10 kcal",
+                              style: TextStyle(
+                                color: Colors.grey[50],
+                                fontSize: 12,
+                              ),
+                            )
+                          ],
+                        ),
+                        collapsed: null,
+                      ),
+                    ),
+                  ),
+                  Container(
+                    decoration: BoxDecoration(
+                      border: Border(
+                        bottom: BorderSide(
+                          style: BorderStyle.solid,
+                          color: Colors.grey[50],
+                          width: 1,
+                        ),
+                      ),
+                    ),
+                    child: Container(
+                      margin: EdgeInsets.only(left: 20, top: 5, bottom: 5),
+                      child: ExpandablePanel(
+                        theme: ExpandableThemeData(iconColor: Colors.grey[50]),
+                        header: Row(
+                          children: [
+                            Icon(
+                              FontAwesomeIcons.pizzaSlice,
+                              color: Colors.grey[50],
+                              size: 32,
+                            ),
+                            SizedBox(
+                              width: 20,
+                            ),
+                            Text(
+                              "Lunch - ",
+                              style: TextStyle(
+                                color: Colors.grey[50],
+                                fontSize: 24,
+                              ),
+                            ),
+                            Text(
+                              "410 kcal",
+                              style: TextStyle(
+                                color: Colors.grey[50],
+                                fontSize: 24,
+                              ),
+                            )
+                          ],
+                        ),
+                        expanded: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Divider(
+                              color: Colors.grey,
+                              endIndent: 30,
+                            ),
+                            Text(
+                              "Fried Rice - 310 kcal",
+                              style: TextStyle(
+                                color: Colors.grey[50],
+                                fontSize: 12,
+                              ),
+                            ),
+                            Text(
+                              "Milk - 100 kcal",
+                              style: TextStyle(
+                                color: Colors.grey[50],
+                                fontSize: 12,
+                              ),
+                            ),
+                          ],
+                        ),
+                        collapsed: null,
+                      ),
+                    ),
+                  ),
+                  Container(
+                    decoration: BoxDecoration(
+                      border: Border(
+                        bottom: BorderSide(
+                          style: BorderStyle.solid,
+                          color: Colors.grey[50],
+                          width: 1,
+                        ),
+                      ),
+                    ),
+                    child: Container(
+                      margin: EdgeInsets.only(left: 20, top: 5, bottom: 5),
+                      child: ExpandablePanel(
+                        theme: ExpandableThemeData(iconColor: Colors.grey[50]),
+                        header: Row(
+                          children: [
+                            Icon(
+                              FontAwesomeIcons.utensils,
+                              color: Colors.grey[50],
+                              size: 32,
+                            ),
+                            SizedBox(
+                              width: 20,
+                            ),
+                            Text(
+                              "Dinner - ",
+                              style: TextStyle(
+                                color: Colors.grey[50],
+                                fontSize: 24,
+                              ),
+                            ),
+                            Text(
+                              "210 kcal",
+                              style: TextStyle(
+                                color: Colors.grey[50],
+                                fontSize: 24,
+                              ),
+                            )
+                          ],
+                        ),
+                        expanded: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Divider(
+                              color: Colors.grey,
+                              endIndent: 30,
+                            ),
+                            Text(
+                              "Pizza - 210 kcal",
+                              style: TextStyle(
+                                color: Colors.grey[50],
+                                fontSize: 12,
+                              ),
+                            )
+                          ],
+                        ),
+                        collapsed: null,
+                      ),
+                    ),
+                  ),
+                  Container(
+                    decoration: BoxDecoration(
+                      border: Border(
+                        bottom: BorderSide(
+                          style: BorderStyle.solid,
+                          color: Colors.grey[50],
+                          width: 1,
+                        ),
+                      ),
+                    ),
+                    child: Container(
+                      margin: EdgeInsets.only(left: 20, top: 5, bottom: 5),
+                      child: ExpandablePanel(
+                        theme: ExpandableThemeData(iconColor: Colors.grey[50]),
+                        header: Row(
+                          children: [
+                            Icon(
+                              FontAwesomeIcons.cookieBite,
+                              color: Colors.grey[50],
+                              size: 32,
+                            ),
+                            SizedBox(
+                              width: 20,
+                            ),
+                            Text(
+                              "Snacks - ",
+                              style: TextStyle(
+                                color: Colors.grey[50],
+                                fontSize: 24,
+                              ),
+                            ),
+                            Text(
+                              "300 kcal",
+                              style: TextStyle(
+                                color: Colors.grey[50],
+                                fontSize: 24,
+                              ),
+                            )
+                          ],
+                        ),
+                        expanded: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Divider(
+                              color: Colors.grey,
+                              endIndent: 30,
+                            ),
+                            Text(
+                              "Chocolate Chip Cookie - 100 kcal",
+                              style: TextStyle(
+                                color: Colors.grey[50],
+                                fontSize: 12,
+                              ),
+                            ),
+                            Text(
+                              "Oreo - 200 kcal",
+                              style: TextStyle(
+                                color: Colors.grey[50],
+                                fontSize: 12,
+                              ),
+                            ),
+                          ],
+                        ),
+                        collapsed: null,
+                      ),
+                    ),
+                  )
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
       ProfileFragment(authService: _authService),
     ];
     return SafeArea(
       child: Scaffold(
+        resizeToAvoidBottomInset: false,
         backgroundColor: dark,
         bottomNavigationBar: SnakeNavigationBar.color(
           padding: EdgeInsets.fromLTRB(0, 4, 0, 4),
@@ -58,7 +405,7 @@ class _HomeState extends State<Home> {
           snakeViewColor: Colors.white,
           backgroundColor: dark,
           selectedItemColor: selectedColor,
-          unselectedItemColor: Colors.blueGrey,
+          unselectedItemColor: Colors.grey,
           currentIndex: _selectedItemPosition,
           onTap: (int index) {
             setState(() {
@@ -659,6 +1006,15 @@ class ProfileFragment extends StatelessWidget {
             child: InkWell(
               borderRadius: BorderRadius.circular(50),
               child: ListTile(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    PageTransition(
+                      child: EditProfile(),
+                      type: PageTransitionType.rightToLeftWithFade,
+                    ),
+                  );
+                },
                 leading: Icon(
                   FontAwesomeIcons.userEdit,
                   color: Colors.grey[50],
@@ -689,27 +1045,30 @@ class ProfileFragment extends StatelessWidget {
                     style: BorderStyle.solid, color: Colors.grey[50], width: 1),
               ),
             ),
-            child: ListTile(
-              onTap: () async {
-                await _authService.signOut();
-              },
-              leading: Icon(
-                FontAwesomeIcons.signOutAlt,
-                color: Colors.grey[50],
-              ),
-              title: Text(
-                "Sign out.",
-                style: TextStyle(
+            child: InkWell(
+              borderRadius: BorderRadius.circular(50),
+              child: ListTile(
+                onTap: () async {
+                  await _authService.signOut();
+                },
+                leading: Icon(
+                  FontAwesomeIcons.signOutAlt,
                   color: Colors.grey[50],
-                  fontFamily: 'Isidora',
                 ),
-              ),
-              subtitle: Text(
-                "bye.",
-                style: TextStyle(
-                  color: Colors.grey,
-                  fontFamily: 'Isidora',
-                  fontSize: 12,
+                title: Text(
+                  "Sign out.",
+                  style: TextStyle(
+                    color: Colors.grey[50],
+                    fontFamily: 'Isidora',
+                  ),
+                ),
+                subtitle: Text(
+                  "bye.",
+                  style: TextStyle(
+                    color: Colors.grey,
+                    fontFamily: 'Isidora',
+                    fontSize: 12,
+                  ),
                 ),
               ),
             ),
