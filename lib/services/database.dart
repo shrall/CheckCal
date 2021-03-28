@@ -4,10 +4,10 @@ class DatabaseService {
   final String uid;
   DatabaseService({this.uid});
   final CollectionReference userCollection =
-      Firestore.instance.collection('users');
+      FirebaseFirestore.instance.collection('users');
 
   Future<void> updateUserData(String name, int limit) async {
-    return await userCollection.document(uid).setData({
+    return await userCollection.doc(uid).set({
       'name': name,
       'limit': limit,
     });

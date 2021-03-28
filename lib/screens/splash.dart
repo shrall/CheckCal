@@ -31,7 +31,7 @@ class _SplashScreenState extends State<SplashScreen>
         Navigator.pushReplacement(
           context,
           PageTransition(
-            child: Wrapper(),
+            child: Wrapper(index: 1, email: null, password: null),
             type: PageTransitionType.fade,
           ),
         );

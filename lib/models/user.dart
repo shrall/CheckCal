@@ -1,9 +1,9 @@
 import 'package:checkcal/models/logbook.dart';
 
-class User {
+class MyUser {
   final String uid;
 
-  User({this.uid});
+  MyUser({this.uid});
 }
 
 class UserData {

@@ -1,3 +1,5 @@
+import 'package:checkcal/models/user.dart';
+import 'package:checkcal/screens/wrapper.dart';
 import 'package:checkcal/widgets/loading.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -6,6 +8,7 @@ import 'package:checkcal/services/auth.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:checkcal/screens/authenticate/sign_up.dart';
+import 'package:provider/provider.dart';
 
 Color dark = Color.fromRGBO(13, 7, 20, 1);
 Color red = Color.fromRGBO(240, 66, 84, 1);
@@ -38,7 +41,8 @@ class _SignInState extends State<SignIn> {
 
   @override
   Widget build(BuildContext context) {
-    print('sign in built');
+    final user = Provider.of<MyUser>(context);
+    print("signin built" + user.toString());
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
     return loading
@@ -335,7 +339,11 @@ class _SignInState extends State<SignIn> {
                                     Navigator.pushReplacement(
                                       context,
                                       PageTransition(
-                                        child: SignUp(),
+                                        child: Wrapper(
+                                          index: 2,
+                                          email: null,
+                                          password: null,
+                                        ),
                                         duration: Duration(milliseconds: 500),
                                         type: PageTransitionType.fade,
                                       ),

@@ -1,3 +1,5 @@
+import 'package:checkcal/models/user.dart';
+import 'package:checkcal/screens/wrapper.dart';
 import 'package:checkcal/widgets/loading.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -6,6 +8,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:checkcal/screens/authenticate/sign_in.dart';
 import 'package:checkcal/screens/authenticate/intro.dart';
+import 'package:provider/provider.dart';
 
 Color dark = Color.fromRGBO(13, 7, 20, 1);
 Color gray = Color.fromRGBO(44, 40, 50, 1);
@@ -47,6 +50,8 @@ class _SignUpState extends State<SignUp> {
 
   @override
   Widget build(BuildContext context) {
+    final user = Provider.of<MyUser>(context);
+    print("signup built" + user.toString());
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
     return loading
@@ -321,8 +326,10 @@ class _SignUpState extends State<SignUp> {
                               Navigator.push(
                                 context,
                                 PageTransition(
-                                  child:
-                                      Intro(email: email, password: password),
+                                  child: Wrapper(
+                                      index: 3,
+                                      email: email,
+                                      password: password),
                                   type: PageTransitionType.rightToLeftWithFade,
                                 ),
                               );
@@ -399,12 +406,15 @@ class _SignUpState extends State<SignUp> {
                                 recognizer: TapGestureRecognizer()
                                   ..onTap = () {
                                     Navigator.pushReplacement(
-                                        context,
-                                        PageTransition(
-                                            child: SignIn(),
-                                            duration:
-                                                Duration(milliseconds: 500),
-                                            type: PageTransitionType.fade));
+                                      context,
+                                      PageTransition(
+                                          child: Wrapper(
+                                              index: 1,
+                                              email: null,
+                                              password: null),
+                                          duration: Duration(milliseconds: 500),
+                                          type: PageTransitionType.fade),
+                                    );
                                   },
                               ),
                             ],
