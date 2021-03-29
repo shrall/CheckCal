@@ -7,8 +7,7 @@ class DatabaseService {
       FirebaseFirestore.instance.collection("users");
 
   Future<void> updateUserData(String name, int limit) async {
-    print("uid : " + uid);
-    await userCollection.doc(uid).set({
+    return await userCollection.doc(uid).set({
       'name': name,
       'limit': limit,
     });
