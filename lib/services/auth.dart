@@ -15,6 +15,22 @@ class AuthService {
     return _auth.authStateChanges().map((User user) => _userFromFirebase(user));
   }
 
+  // register with email and password
+  Future registerWithEmailAndPassword(
+      String email, String password, String name, int limit) async {
+    try {
+      print("register test" + email + password + name + limit.toString());
+      UserCredential result = await _auth.createUserWithEmailAndPassword(
+          email: email, password: password);
+      User user = result.user;
+      await DatabaseService(uid: user.uid).updateUserData(name, limit);
+      return _userFromFirebase(user);
+    } catch (error) {
+      print(error.toString());
+      return null;
+    }
+  }
+
   // sign in with email and password
   Future signInWithEmailAndPassword(String email, String password) async {
     try {
@@ -22,21 +38,6 @@ class AuthService {
           email: email, password: password);
       User user = result.user;
       return user;
-    } catch (error) {
-      print(error.toString());
-      return null;
-    }
-  }
-
-  // register with email and password
-  Future registerWithEmailAndPassword(
-      String email, String password, String name, int limit) async {
-    try {
-      UserCredential result = await _auth.createUserWithEmailAndPassword(
-          email: email, password: password);
-      User user = result.user;
-      // await DatabaseService(uid: user.uid).updateUserData(name, limit);
-      return _userFromFirebase(user);
     } catch (error) {
       print(error.toString());
       return null;

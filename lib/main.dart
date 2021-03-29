@@ -12,13 +12,15 @@ Future<void> main() async {
 }
 
 class MyApp extends StatelessWidget {
-  GlobalKey<NavigatorState> _mainNavigatorKey = GlobalKey<NavigatorState>();
+  final GlobalKey<NavigatorState> _mainNavigatorKey =
+      GlobalKey<NavigatorState>();
   @override
   Widget build(BuildContext context) {
     return StreamProvider<MyUser>.value(
       initialData: null,
       value: AuthService().user,
       child: MaterialApp(
+        debugShowCheckedModeBanner: false,
         navigatorKey: _mainNavigatorKey,
         theme: ThemeData(
           fontFamily: 'Isidora',
