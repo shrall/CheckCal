@@ -3,7 +3,6 @@ import 'package:checkcal/screens/authenticate/sign_in.dart';
 import 'package:checkcal/screens/authenticate/sign_up.dart';
 import 'package:flutter/material.dart';
 import 'package:checkcal/screens/home/home.dart';
-import 'package:checkcal/screens/authenticate/authenticate.dart';
 import 'package:checkcal/models/user.dart';
 import 'package:provider/provider.dart';
 

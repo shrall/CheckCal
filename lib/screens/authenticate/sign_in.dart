@@ -7,7 +7,6 @@ import 'package:email_validator/email_validator.dart';
 import 'package:checkcal/services/auth.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:page_transition/page_transition.dart';
-import 'package:checkcal/screens/authenticate/sign_up.dart';
 import 'package:provider/provider.dart';
 
 Color dark = Color.fromRGBO(13, 7, 20, 1);

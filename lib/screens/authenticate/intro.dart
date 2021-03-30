@@ -408,11 +408,7 @@ class _IntroState extends State<Intro> with SingleTickerProviderStateMixin {
                     print('loading set to true');
                   });
                   dynamic result = await _auth.registerWithEmailAndPassword(
-                    email,
-                    password,
-                    name,
-                    limit,
-                  );
+                      email, password, name, limit, DateTime.now());
                   if (result == null) {
                     setState(() {
                       Fluttertoast.showToast(

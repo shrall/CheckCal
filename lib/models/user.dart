@@ -1,5 +1,3 @@
-import 'package:checkcal/models/logbook.dart';
-
 class MyUser {
   final String uid;
 
@@ -9,8 +7,8 @@ class MyUser {
 class UserData {
   final String uid;
   final String name;
-  final int limitkcal;
-  final List<Logbook> logbooks;
+  final int limit;
+  final String imgUrl;
 
-  UserData({this.uid, this.name, this.limitkcal, this.logbooks});
+  UserData({this.uid, this.name, this.limit, this.imgUrl});
 }

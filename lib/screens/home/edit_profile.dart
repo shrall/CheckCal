@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:checkcal/services/database.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_picker/image_picker.dart';
@@ -11,6 +12,11 @@ Color red = Color.fromRGBO(240, 66, 84, 1);
 Color orange = Color.fromRGBO(255, 146, 53, 1);
 
 class EditProfile extends StatefulWidget {
+  final String uid;
+  final String name;
+  final int limit;
+  final String imgUrl;
+  EditProfile({this.uid, this.name, this.limit, this.imgUrl});
   @override
   _EditProfileState createState() => _EditProfileState();
 }
@@ -100,6 +106,40 @@ class _EditProfileState extends State<EditProfile> {
       return 'Your intake limit cannot be less than 0!';
   }
 
+  getTempImage() {
+    if (_image != null) {
+      return ClipOval(
+        child: Image.file(
+          _image,
+          width: 150,
+          height: 150,
+          fit: BoxFit.cover,
+        ),
+      );
+    } else if (widget.imgUrl != "") {
+      return ClipOval(
+        child: Image.network(
+          widget.imgUrl,
+          width: 150,
+          height: 150,
+          fit: BoxFit.cover,
+        ),
+      );
+    } else {
+      ClipOval(
+        child: Container(
+          width: 150,
+          height: 150,
+          child: Icon(
+            FontAwesomeIcons.camera,
+            color: Colors.grey,
+            size: 50,
+          ),
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
@@ -134,26 +174,7 @@ class _EditProfileState extends State<EditProfile> {
                         style: BorderStyle.solid,
                       ),
                     ),
-                    child: _image != null
-                        ? ClipOval(
-                            child: Image.file(
-                              _image,
-                              width: 150,
-                              height: 150,
-                              fit: BoxFit.cover,
-                            ),
-                          )
-                        : ClipOval(
-                            child: Container(
-                              width: 150,
-                              height: 150,
-                              child: Icon(
-                                FontAwesomeIcons.camera,
-                                color: Colors.grey,
-                                size: 50,
-                              ),
-                            ),
-                          ),
+                    child: getTempImage(),
                   ),
                 ),
               ),
@@ -161,6 +182,7 @@ class _EditProfileState extends State<EditProfile> {
                 padding: EdgeInsets.fromLTRB(20, 5, 0, 0),
                 width: width - 20,
                 child: TextFormField(
+                  initialValue: widget.name,
                   autovalidateMode: AutovalidateMode.onUserInteraction,
                   validator: (value) => validateName(value),
                   onChanged: (val) {
@@ -220,6 +242,7 @@ class _EditProfileState extends State<EditProfile> {
                 padding: EdgeInsets.fromLTRB(20, 20, 0, 0),
                 width: width - 20,
                 child: TextFormField(
+                  initialValue: widget.limit.toString(),
                   keyboardType: TextInputType.number,
                   inputFormatters: <TextInputFormatter>[
                     FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
@@ -292,7 +315,23 @@ class _EditProfileState extends State<EditProfile> {
                   child: ElevatedButton(
                     onPressed: () async {
                       if (_formKey.currentState.validate()) {
-                        Fluttertoast.showToast(msg: name + limit.toString());
+                        if (name == null) {
+                          name = widget.name;
+                        }
+                        if (limit == null) {
+                          limit = widget.limit;
+                        }
+                        DatabaseService().updateProfile(
+                          widget.uid,
+                          name,
+                          limit,
+                        );
+                        if (_image != null) {
+                          DatabaseService()
+                              .updateProfilePic(widget.uid, _image);
+                        }
+                        Navigator.of(context).pop();
+                        setState(() {});
                       } else {
                         Fluttertoast.showToast(msg: "Please check the fields!");
                       }
