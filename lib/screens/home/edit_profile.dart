@@ -1,10 +1,13 @@
 import 'dart:io';
+import 'package:checkcal/screens/wrapper.dart';
 import 'package:checkcal/services/database.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:checkcal/screens/home/home.dart';
+import 'package:page_transition/page_transition.dart';
 
 Color dark = Color.fromRGBO(13, 7, 20, 1);
 Color gray = Color.fromRGBO(44, 40, 50, 1);
@@ -321,17 +324,24 @@ class _EditProfileState extends State<EditProfile> {
                         if (limit == null) {
                           limit = widget.limit;
                         }
-                        DatabaseService().updateProfile(
+                        await DatabaseService().updateProfile(
                           widget.uid,
                           name,
                           limit,
                         );
                         if (_image != null) {
-                          DatabaseService()
+                          await DatabaseService()
                               .updateProfilePic(widget.uid, _image);
                         }
-                        Navigator.of(context).pop();
-                        setState(() {});
+                        Navigator.pushReplacement(
+                          context,
+                          PageTransition(
+                              duration: Duration(milliseconds: 800),
+                              child: Wrapper(
+                                index: 2,
+                              ),
+                              type: PageTransitionType.leftToRightWithFade),
+                        );
                       } else {
                         Fluttertoast.showToast(msg: "Please check the fields!");
                       }

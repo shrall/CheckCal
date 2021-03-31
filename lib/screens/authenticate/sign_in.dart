@@ -339,7 +339,7 @@ class _SignInState extends State<SignIn> {
                                       context,
                                       PageTransition(
                                         child: Wrapper(
-                                          index: 2,
+                                          index: 1,
                                           email: null,
                                           password: null,
                                         ),

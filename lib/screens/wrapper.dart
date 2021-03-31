@@ -23,11 +23,11 @@ class Wrapper extends StatelessWidget {
     // return either the Home or Authenticate widget
     if (user == null) {
       print('goauth');
-      if (index == 1 || signOut != 0) {
+      if (index == 0 || signOut != 0) {
         return SignIn();
-      } else if (index == 2) {
+      } else if (index == 1) {
         return SignUp();
-      } else if (index == 3) {
+      } else if (index == 2) {
         return Intro(
           email: email,
           password: password,
@@ -35,8 +35,11 @@ class Wrapper extends StatelessWidget {
       }
     } else {
       print('gohome');
+      print(index.toString());
       signOut += 1;
-      return Home();
+      return Home(
+        index: index,
+      );
     }
   }
 }

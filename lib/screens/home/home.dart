@@ -1,3 +1,4 @@
+import 'package:checkcal/screens/home/add_log.dart';
 import 'package:checkcal/services/auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -22,6 +23,8 @@ Color lettuce = Color.fromRGBO(145, 166, 29, 1);
 Color ketchup = Color.fromRGBO(210, 37, 1, 1);
 
 class Home extends StatefulWidget {
+  final int index;
+  Home({this.index});
   @override
   _HomeState createState() => _HomeState();
 }
@@ -38,6 +41,7 @@ class _HomeState extends State<Home> {
   int limit, indexName;
   DateTime joinedDate;
   void fetchUserData() async {
+    print("fetching");
     // ignore: await_only_futures
     await FirebaseFirestore.instance
         .collection('users')
@@ -62,20 +66,23 @@ class _HomeState extends State<Home> {
         indexName = name.indexOf(" ");
       }
     });
-    if (mounted) {
-      setState(() {});
-    }
+    print("fetched");
+    setState(() {});
   }
 
   @override
   void initState() {
     super.initState();
     initializeDateFormatting();
+    fetchUserData();
+    if (widget.index != null) {
+      _selectedItemPosition = widget.index;
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    fetchUserData();
+    print('home built');
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
     final List<Widget> _children = [
@@ -199,7 +206,16 @@ class _HomeState extends State<Home> {
                     ),
                     child: InkWell(
                       onTap: () {
-                        print("tapped breakfast");
+                        Navigator.push(
+                          context,
+                          PageTransition(
+                            duration: Duration(milliseconds: 800),
+                            child: AddLog(
+                              type: "snacks",
+                            ),
+                            type: PageTransitionType.rightToLeftWithFade,
+                          ),
+                        );
                       },
                       child: Container(
                         padding: EdgeInsets.symmetric(horizontal: 35),
@@ -277,7 +293,16 @@ class _HomeState extends State<Home> {
                     ),
                     child: InkWell(
                       onTap: () {
-                        print("tapped dinner");
+                        Navigator.push(
+                          context,
+                          PageTransition(
+                            duration: Duration(milliseconds: 800),
+                            child: AddLog(
+                              type: "dinner",
+                            ),
+                            type: PageTransitionType.rightToLeftWithFade,
+                          ),
+                        );
                       },
                       child: Container(
                         padding: EdgeInsets.symmetric(horizontal: 35),
@@ -353,7 +378,16 @@ class _HomeState extends State<Home> {
                     ),
                     child: InkWell(
                       onTap: () {
-                        print("tapped lunch");
+                        Navigator.push(
+                          context,
+                          PageTransition(
+                            duration: Duration(milliseconds: 800),
+                            child: AddLog(
+                              type: "lunch",
+                            ),
+                            type: PageTransitionType.rightToLeftWithFade,
+                          ),
+                        );
                       },
                       child: Container(
                         padding: EdgeInsets.symmetric(horizontal: 35),
@@ -431,7 +465,16 @@ class _HomeState extends State<Home> {
                     ),
                     child: InkWell(
                       onTap: () {
-                        print("tapped breakfast");
+                        Navigator.push(
+                          context,
+                          PageTransition(
+                            duration: Duration(milliseconds: 800),
+                            child: AddLog(
+                              type: "breakfast",
+                            ),
+                            type: PageTransitionType.rightToLeftWithFade,
+                          ),
+                        );
                       },
                       child: Container(
                         padding: EdgeInsets.symmetric(horizontal: 35),
@@ -515,6 +558,7 @@ class _HomeState extends State<Home> {
               onDateSelected: (date) {
                 setState(() {
                   _selectedDate = date;
+                  print(_selectedDate);
                 });
               },
               leftMargin: 20,
@@ -846,15 +890,26 @@ class _HomeState extends State<Home> {
                   style: BorderStyle.solid,
                 ),
               ),
-              child: ClipOval(
-                child: Image.network(
-                  imgUrl ??
-                      'https://instagram.fcgk30-1.fna.fbcdn.net/v/t51.2885-19/s150x150/150539498_1067189057127751_3508245857102917308_n.jpg?tp=1&_nc_ht=instagram.fcgk30-1.fna.fbcdn.net&_nc_cat=107&_nc_ohc=HWLtZTSUgG4AX8mevSH&edm=ABfd0MgAAAAA&ccb=7-4&oh=ca92afe42ba4fedb247da316f9af835f&oe=608724E0&_nc_sid=7bff83',
-                  width: 150,
-                  height: 150,
-                  fit: BoxFit.cover,
-                ),
-              ),
+              child: imgUrl != null
+                  ? ClipOval(
+                      child: Image.network(
+                        imgUrl,
+                        width: 150,
+                        height: 150,
+                        fit: BoxFit.cover,
+                      ),
+                    )
+                  : ClipOval(
+                      child: Container(
+                        width: 150,
+                        height: 150,
+                        child: Icon(
+                          FontAwesomeIcons.camera,
+                          color: Colors.grey,
+                          size: 50,
+                        ),
+                      ),
+                    ),
             ),
             Text(
               name,

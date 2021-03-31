@@ -325,7 +325,7 @@ class _SignUpState extends State<SignUp> {
                                 context,
                                 PageTransition(
                                   child: Wrapper(
-                                      index: 3,
+                                      index: 2,
                                       email: email,
                                       password: password),
                                   type: PageTransitionType.rightToLeftWithFade,
@@ -407,7 +407,7 @@ class _SignUpState extends State<SignUp> {
                                       context,
                                       PageTransition(
                                           child: Wrapper(
-                                              index: 1,
+                                              index: 0,
                                               email: null,
                                               password: null),
                                           duration: Duration(milliseconds: 500),
