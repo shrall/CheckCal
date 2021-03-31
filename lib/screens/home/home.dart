@@ -1,4 +1,5 @@
 import 'package:checkcal/screens/home/add_log.dart';
+import 'package:checkcal/screens/wrapper.dart';
 import 'package:checkcal/services/auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -206,11 +207,13 @@ class _HomeState extends State<Home> {
                     ),
                     child: InkWell(
                       onTap: () {
+                        print(uid);
                         Navigator.push(
                           context,
                           PageTransition(
                             duration: Duration(milliseconds: 800),
                             child: AddLog(
+                              uid: uid,
                               type: "snacks",
                             ),
                             type: PageTransitionType.rightToLeftWithFade,
@@ -298,6 +301,7 @@ class _HomeState extends State<Home> {
                           PageTransition(
                             duration: Duration(milliseconds: 800),
                             child: AddLog(
+                              uid: uid,
                               type: "dinner",
                             ),
                             type: PageTransitionType.rightToLeftWithFade,
@@ -383,6 +387,7 @@ class _HomeState extends State<Home> {
                           PageTransition(
                             duration: Duration(milliseconds: 800),
                             child: AddLog(
+                              uid: uid,
                               type: "lunch",
                             ),
                             type: PageTransitionType.rightToLeftWithFade,
@@ -470,6 +475,7 @@ class _HomeState extends State<Home> {
                           PageTransition(
                             duration: Duration(milliseconds: 800),
                             child: AddLog(
+                              uid: uid,
                               type: "breakfast",
                             ),
                             type: PageTransitionType.rightToLeftWithFade,
@@ -1066,6 +1072,18 @@ class _HomeState extends State<Home> {
                 borderRadius: BorderRadius.circular(50),
                 child: ListTile(
                   onTap: () async {
+                    Navigator.pushReplacement(
+                      context,
+                      PageTransition(
+                        duration: Duration(milliseconds: 800),
+                        child: Wrapper(
+                          index: 0,
+                          email: null,
+                          password: null,
+                        ),
+                        type: PageTransitionType.fade,
+                      ),
+                    );
                     await _authService.signOut();
                   },
                   leading: Icon(

@@ -119,7 +119,7 @@ class _EditProfileState extends State<EditProfile> {
           fit: BoxFit.cover,
         ),
       );
-    } else if (widget.imgUrl != "") {
+    } else if (widget.imgUrl != "" && widget.imgUrl != null) {
       return ClipOval(
         child: Image.network(
           widget.imgUrl,
@@ -129,7 +129,7 @@ class _EditProfileState extends State<EditProfile> {
         ),
       );
     } else {
-      ClipOval(
+      return ClipOval(
         child: Container(
           width: 150,
           height: 150,

@@ -1,3 +1,4 @@
+import 'package:checkcal/services/database.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:checkcal/models/log.dart';
@@ -11,30 +12,33 @@ Color orange = Color.fromRGBO(255, 146, 53, 1);
 
 class AddLog extends StatefulWidget {
   final String type;
-  AddLog({this.type});
+  final String uid;
+  AddLog({@required this.type, @required this.uid});
   @override
   _AddLogState createState() => _AddLogState();
 }
 
 class _AddLogState extends State<AddLog> {
+  final DatabaseService _databaseService = DatabaseService();
   var logs = [
-    Log("Android Cupcake", 1),
-    Log("Android Donut", 2),
-    Log("Android Eclair", 1),
-    Log("Android Froyo", 2),
-    Log("Android Gingerbread", 1),
-    Log("Android Honeycomb", 2),
-    Log("Android Ice Cream Sandwich", 1),
-    Log("Android Jelly Bean", 2),
-    Log("Android Kitkat", 1),
-    Log("Android Lollipop", 2),
-    Log("Android Marshmallow", 1),
-    Log("Android Nougat", 2),
-    Log("Android Oreo", 1),
-    Log("Android Pie", 2),
-    Log("Android Pie", 2),
-    Log("Android Pie", 2),
-    Log("Android Pie", 2)
+    Log(name: "Android Cupcake", kcal: 1),
+    Log(name: "Android Cupcake", kcal: 1),
+    Log(name: "Android Cupcake", kcal: 1),
+    Log(name: "Android Cupcake", kcal: 1),
+    Log(name: "Android Cupcake", kcal: 1),
+    Log(name: "Android Cupcake", kcal: 1),
+    Log(name: "Android Cupcake", kcal: 1),
+    Log(name: "Android Cupcake", kcal: 1),
+    Log(name: "Android Cupcake", kcal: 1),
+    Log(name: "Android Cupcake", kcal: 1),
+    Log(name: "Android Cupcake", kcal: 1),
+    Log(name: "Android Cupcake", kcal: 1),
+    Log(name: "Android Cupcake", kcal: 1),
+    Log(name: "Android Cupcake", kcal: 1),
+    Log(name: "Android Cupcake", kcal: 1),
+    Log(name: "Android Cupcake", kcal: 1),
+    Log(name: "Android Cupcake", kcal: 1),
+    Log(name: "Android Cupcake", kcal: 1),
   ];
   int totalKcal = 0;
 
@@ -229,6 +233,7 @@ class _AddLogState extends State<AddLog> {
 
   @override
   Widget build(BuildContext context) {
+    print("uid" + widget.uid);
     final width = MediaQuery.of(context).size.width;
     return SafeArea(
       child: Scaffold(
@@ -304,9 +309,15 @@ class _AddLogState extends State<AddLog> {
                         title: 'Add new log.',
                         submitButton: 'Submit',
                         onCancelled: () => print('cancelled'),
-                        onSubmitted: (response) {
+                        onSubmitted: (response) async {
                           print(
-                              'name: ${response.name}, kcal: ${response.kcal}, type: ${response.type}');
+                              'uid: ${widget.uid}, name: ${response.name}, kcal: ${response.kcal}, type: ${response.type}');
+                          DatabaseService(uid: widget.uid).addLog(
+                              response.name,
+                              response.kcal,
+                              widget.type,
+                              response.type,
+                              DateTime.now());
                           setState(() {});
                         },
                       ));

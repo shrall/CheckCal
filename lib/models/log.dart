@@ -1,18 +1,7 @@
 class Log {
-  String _name;
-  int _kcal;
+  final String name;
+  final int kcal;
+  final String type;
 
-  Log(this._name, this._kcal);
-
-  int get kcal => _kcal;
-
-  set kcal(int value) {
-    _kcal = value;
-  }
-
-  String get name => _name;
-
-  set name(String value) {
-    _name = value;
-  }
+  Log({this.name, this.kcal, this.type});
 }
