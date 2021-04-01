@@ -1,9 +1,10 @@
 import 'package:checkcal/services/database.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:checkcal/models/log.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:checkcal/widgets/add_dialog.dart';
+import 'package:intl/intl.dart';
 
 Color dark = Color.fromRGBO(13, 7, 20, 1);
 Color gray = Color.fromRGBO(44, 40, 50, 1);
@@ -19,38 +20,30 @@ class AddLog extends StatefulWidget {
 }
 
 class _AddLogState extends State<AddLog> {
-  final DatabaseService _databaseService = DatabaseService();
-  var logs = [
-    Log(name: "Android Cupcake", kcal: 1),
-    Log(name: "Android Cupcake", kcal: 1),
-    Log(name: "Android Cupcake", kcal: 1),
-    Log(name: "Android Cupcake", kcal: 1),
-    Log(name: "Android Cupcake", kcal: 1),
-    Log(name: "Android Cupcake", kcal: 1),
-    Log(name: "Android Cupcake", kcal: 1),
-    Log(name: "Android Cupcake", kcal: 1),
-    Log(name: "Android Cupcake", kcal: 1),
-    Log(name: "Android Cupcake", kcal: 1),
-    Log(name: "Android Cupcake", kcal: 1),
-    Log(name: "Android Cupcake", kcal: 1),
-    Log(name: "Android Cupcake", kcal: 1),
-    Log(name: "Android Cupcake", kcal: 1),
-    Log(name: "Android Cupcake", kcal: 1),
-    Log(name: "Android Cupcake", kcal: 1),
-    Log(name: "Android Cupcake", kcal: 1),
-    Log(name: "Android Cupcake", kcal: 1),
-  ];
   int totalKcal = 0;
 
-  getTotal() {
-    totalKcal = 0;
-    logs.forEach((log) {
-      totalKcal += log.kcal;
+  void fetchTotalKcal() async {
+    print("fetching");
+    // ignore: await_only_futures
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(widget.uid)
+        .collection("logbooks")
+        .doc((DateFormat('yyyy-MM-dd').format(DateTime.now())))
+        .collection("logs")
+        .where('time', isEqualTo: widget.type)
+        .get()
+        .then((QuerySnapshot querySnapshot) {
+      querySnapshot.docs.forEach((doc) {
+        totalKcal += doc['kcal'];
+        print(totalKcal);
+      });
     });
-    return totalKcal;
+    print("fetched" + totalKcal.toString());
+    setState(() {});
   }
 
-  Widget getTitle() {
+  Widget getTitle(int total) {
     if (widget.type == 'breakfast') {
       return Row(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -68,31 +61,31 @@ class _AddLogState extends State<AddLog> {
               fontSize: 32,
             ),
           ),
-          SizedBox(width: 12),
-          Text(
-            '|',
-            style: TextStyle(
-              color: Colors.grey[50],
-              fontSize: 32,
-            ),
-          ),
-          SizedBox(width: 12),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: <Text>[
-              Text(
-                "Total Intake",
-                style:
-                    TextStyle(color: Colors.amber[400], fontFamily: 'Isidora'),
-              ),
-              Text(
-                getTotal().toString() + " kcal",
-                style:
-                    TextStyle(color: Colors.grey[100], fontFamily: 'Isidora'),
-              )
-            ],
-          ),
+          // SizedBox(width: 12),
+          // Text(
+          //   '|',
+          //   style: TextStyle(
+          //     color: Colors.grey[50],
+          //     fontSize: 32,
+          //   ),
+          // ),
+          // SizedBox(width: 12),
+          // Column(
+          //   crossAxisAlignment: CrossAxisAlignment.start,
+          //   mainAxisAlignment: MainAxisAlignment.start,
+          //   children: <Text>[
+          //     Text(
+          //       "Total Intake",
+          //       style:
+          //           TextStyle(color: Colors.amber[400], fontFamily: 'Isidora'),
+          //     ),
+          //     Text(
+          //       total.toString() + " kcal",
+          //       style:
+          //           TextStyle(color: Colors.grey[100], fontFamily: 'Isidora'),
+          //     )
+          //   ],
+          // ),
         ],
       );
     } else if (widget.type == 'lunch') {
@@ -112,31 +105,31 @@ class _AddLogState extends State<AddLog> {
               fontSize: 32,
             ),
           ),
-          SizedBox(width: 12),
-          Text(
-            '|',
-            style: TextStyle(
-              color: Colors.grey[50],
-              fontSize: 32,
-            ),
-          ),
-          SizedBox(width: 12),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: <Text>[
-              Text(
-                "Total Intake",
-                style:
-                    TextStyle(color: Colors.amber[400], fontFamily: 'Isidora'),
-              ),
-              Text(
-                getTotal().toString() + " kcal",
-                style:
-                    TextStyle(color: Colors.grey[100], fontFamily: 'Isidora'),
-              )
-            ],
-          ),
+          // SizedBox(width: 12),
+          // Text(
+          //   '|',
+          //   style: TextStyle(
+          //     color: Colors.grey[50],
+          //     fontSize: 32,
+          //   ),
+          // ),
+          // SizedBox(width: 12),
+          // Column(
+          //   crossAxisAlignment: CrossAxisAlignment.start,
+          //   mainAxisAlignment: MainAxisAlignment.start,
+          //   children: <Text>[
+          //     Text(
+          //       "Total Intake",
+          //       style:
+          //           TextStyle(color: Colors.amber[400], fontFamily: 'Isidora'),
+          //     ),
+          //     Text(
+          //       total.toString() + " kcal",
+          //       style:
+          //           TextStyle(color: Colors.grey[100], fontFamily: 'Isidora'),
+          //     )
+          //   ],
+          // ),
         ],
       );
     } else if (widget.type == 'dinner') {
@@ -156,31 +149,31 @@ class _AddLogState extends State<AddLog> {
               fontSize: 32,
             ),
           ),
-          SizedBox(width: 12),
-          Text(
-            '|',
-            style: TextStyle(
-              color: Colors.grey[50],
-              fontSize: 32,
-            ),
-          ),
-          SizedBox(width: 12),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: <Text>[
-              Text(
-                "Total Intake",
-                style:
-                    TextStyle(color: Colors.amber[400], fontFamily: 'Isidora'),
-              ),
-              Text(
-                getTotal().toString() + " kcal",
-                style:
-                    TextStyle(color: Colors.grey[100], fontFamily: 'Isidora'),
-              )
-            ],
-          ),
+          // SizedBox(width: 12),
+          // Text(
+          //   '|',
+          //   style: TextStyle(
+          //     color: Colors.grey[50],
+          //     fontSize: 32,
+          //   ),
+          // ),
+          // SizedBox(width: 12),
+          // Column(
+          //   crossAxisAlignment: CrossAxisAlignment.start,
+          //   mainAxisAlignment: MainAxisAlignment.start,
+          //   children: <Text>[
+          //     Text(
+          //       "Total Intake",
+          //       style:
+          //           TextStyle(color: Colors.amber[400], fontFamily: 'Isidora'),
+          //     ),
+          //     Text(
+          //       total.toString() + " kcal",
+          //       style:
+          //           TextStyle(color: Colors.grey[100], fontFamily: 'Isidora'),
+          //     )
+          //   ],
+          // ),
         ],
       );
     } else if (widget.type == 'lunch') {
@@ -200,31 +193,31 @@ class _AddLogState extends State<AddLog> {
               fontSize: 32,
             ),
           ),
-          SizedBox(width: 12),
-          Text(
-            '|',
-            style: TextStyle(
-              color: Colors.grey[50],
-              fontSize: 32,
-            ),
-          ),
-          SizedBox(width: 12),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: <Text>[
-              Text(
-                "Total Intake",
-                style:
-                    TextStyle(color: Colors.amber[400], fontFamily: 'Isidora'),
-              ),
-              Text(
-                getTotal().toString() + " kcal",
-                style:
-                    TextStyle(color: Colors.grey[100], fontFamily: 'Isidora'),
-              )
-            ],
-          ),
+          // SizedBox(width: 12),
+          // Text(
+          //   '|',
+          //   style: TextStyle(
+          //     color: Colors.grey[50],
+          //     fontSize: 32,
+          //   ),
+          // ),
+          // SizedBox(width: 12),
+          // Column(
+          //   crossAxisAlignment: CrossAxisAlignment.start,
+          //   mainAxisAlignment: MainAxisAlignment.start,
+          //   children: <Text>[
+          //     Text(
+          //       "Total Intake",
+          //       style:
+          //           TextStyle(color: Colors.amber[400], fontFamily: 'Isidora'),
+          //     ),
+          //     Text(
+          //       total.toString() + " kcal",
+          //       style:
+          //           TextStyle(color: Colors.grey[100], fontFamily: 'Isidora'),
+          //     )
+          //   ],
+          // ),
         ],
       );
     }
@@ -232,8 +225,13 @@ class _AddLogState extends State<AddLog> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    fetchTotalKcal();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    print("uid" + widget.uid);
     final width = MediaQuery.of(context).size.width;
     return SafeArea(
       child: Scaffold(
@@ -246,53 +244,86 @@ class _AddLogState extends State<AddLog> {
             children: <Widget>[
               Padding(
                 padding: const EdgeInsets.all(16),
-                child: getTitle(),
+                child: getTitle(totalKcal),
               ),
               Divider(
                 color: Colors.grey[400],
                 thickness: 2,
               ),
               Expanded(
-                child: ListView.separated(
-                  separatorBuilder: (context, index) {
-                    return Divider(
-                      color: Colors.grey,
-                    );
-                  },
-                  itemBuilder: (context, index) {
-                    var log = logs[index];
-                    return Slidable(
-                      actionPane: SlidableDrawerActionPane(),
-                      actionExtentRatio: 0.25,
-                      child: Container(
-                        color: dark,
-                        child: ListTile(
-                          leading: Icon(
-                            FontAwesomeIcons.mugHot,
-                            color: Colors.white,
-                            size: 40,
-                          ),
-                          title: Text(
-                            log.name,
-                            style: TextStyle(color: Colors.grey[50]),
-                          ),
-                          subtitle: Text(
-                            log.kcal.toString() + " kcal",
-                            style: TextStyle(color: Colors.grey[50]),
-                          ),
+                child: StreamBuilder<QuerySnapshot>(
+                  stream: FirebaseFirestore.instance
+                      .collection('users')
+                      .doc(widget.uid)
+                      .collection("logbooks")
+                      .doc((DateFormat('yyyy-MM-dd').format(DateTime.now())))
+                      .collection("logs")
+                      .where('time', isEqualTo: widget.type)
+                      .snapshots(),
+                  builder: (context, snapshot) {
+                    if (!snapshot.hasData) {
+                      return Container(
+                        height: 200.0,
+                        alignment: Alignment.center,
+                        child: CircularProgressIndicator(
+                          valueColor:
+                              AlwaysStoppedAnimation<Color>(Colors.black45),
                         ),
-                      ),
-                      secondaryActions: <Widget>[
-                        IconSlideAction(
-                          caption: 'Delete',
-                          color: red,
-                          icon: Icons.delete,
-                          onTap: () => print('Delete'),
-                        ),
-                      ],
-                    );
+                      );
+                    } else {
+                      return ListView.separated(
+                        itemBuilder: (_, index) {
+                          DocumentSnapshot log = snapshot.data.docs[index];
+                          return Slidable(
+                            actionPane: SlidableDrawerActionPane(),
+                            actionExtentRatio: 0.25,
+                            child: Container(
+                              color: dark,
+                              child: ListTile(
+                                leading: log.data()['type'] != "food"
+                                    ? Icon(
+                                        FontAwesomeIcons.mugHot,
+                                        color: Colors.white,
+                                        size: 40,
+                                      )
+                                    : Icon(
+                                        FontAwesomeIcons.hamburger,
+                                        color: Colors.white,
+                                        size: 40,
+                                      ),
+                                title: Text(
+                                  log.data()['name'],
+                                  style: TextStyle(color: Colors.grey[50]),
+                                ),
+                                subtitle: Text(
+                                  log.data()['kcal'].toString() + " kcal",
+                                  style: TextStyle(color: Colors.grey[50]),
+                                ),
+                              ),
+                            ),
+                            secondaryActions: <Widget>[
+                              IconSlideAction(
+                                caption: 'Delete',
+                                color: red,
+                                icon: Icons.delete,
+                                onTap: () async {
+                                  await DatabaseService(uid: widget.uid)
+                                      .deleteLog(log.id, DateTime.now());
+                                  setState(() {});
+                                },
+                              ),
+                            ],
+                          );
+                        },
+                        separatorBuilder: (context, index) {
+                          return Divider(
+                            color: Colors.grey,
+                          );
+                        },
+                        itemCount: snapshot.data.docs.length,
+                      );
+                    }
                   },
-                  itemCount: logs.length,
                 ),
               ),
             ],
@@ -304,23 +335,22 @@ class _AddLogState extends State<AddLog> {
             heroTag: 'addButton',
             onPressed: () {
               showDialog(
-                  context: context,
-                  builder: (context) => AddDialog(
-                        title: 'Add new log.',
-                        submitButton: 'Submit',
-                        onCancelled: () => print('cancelled'),
-                        onSubmitted: (response) async {
-                          print(
-                              'uid: ${widget.uid}, name: ${response.name}, kcal: ${response.kcal}, type: ${response.type}');
-                          DatabaseService(uid: widget.uid).addLog(
-                              response.name,
-                              response.kcal,
-                              widget.type,
-                              response.type,
-                              DateTime.now());
-                          setState(() {});
-                        },
-                      ));
+                context: context,
+                builder: (context) => AddDialog(
+                  title: 'Add new log.',
+                  submitButton: 'Submit',
+                  onCancelled: () => print('cancelled'),
+                  onSubmitted: (response) async {
+                    await DatabaseService(uid: widget.uid).addLog(
+                        response.name,
+                        response.kcal,
+                        widget.type,
+                        response.type,
+                        DateTime.now());
+                    setState(() {});
+                  },
+                ),
+              );
             },
             label: Text("Add Log.",
                 style: TextStyle(

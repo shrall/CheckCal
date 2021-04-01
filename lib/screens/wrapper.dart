@@ -6,6 +6,7 @@ import 'package:checkcal/screens/home/home.dart';
 import 'package:checkcal/models/user.dart';
 import 'package:provider/provider.dart';
 
+// ignore: must_be_immutable
 class Wrapper extends StatelessWidget {
   final int index;
   final String email;
@@ -15,6 +16,7 @@ class Wrapper extends StatelessWidget {
   int signOut = 0;
 
   @override
+  // ignore: missing_return
   Widget build(BuildContext context) {
     print('wrapper built');
     final user = Provider.of<MyUser>(context);

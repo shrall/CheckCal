@@ -1,6 +1,4 @@
 import 'dart:io';
-
-import 'package:checkcal/models/log.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:intl/intl.dart';
@@ -25,16 +23,6 @@ class DatabaseService {
     });
   }
 
-  List<Log> getLogListFromSnapshot(QuerySnapshot snapshot) {
-    return snapshot.docs.map((doc) {
-      return Log(
-        name: doc.get('name'),
-        kcal: doc.get('kcal'),
-        type: doc.get('type'),
-      );
-    }).toList();
-  }
-
   Future<void> addLog(
       String name, int kcal, String time, String type, DateTime date) async {
     await userCollection
@@ -55,6 +43,16 @@ class DatabaseService {
       'time': time,
       'type': type,
     });
+  }
+
+  Future<void> deleteLog(String docID, DateTime date) {
+    return userCollection
+        .doc(uid)
+        .collection("logbooks")
+        .doc(DateFormat('yyyy-MM-dd').format(date))
+        .collection('logs')
+        .doc(docID)
+        .delete();
   }
 
   Future<bool> updateProfile(
