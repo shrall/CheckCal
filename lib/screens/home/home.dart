@@ -4,6 +4,7 @@ import 'package:checkcal/services/auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:auto_size_text/auto_size_text.dart';
@@ -42,6 +43,12 @@ class _HomeState extends State<Home> {
   int limit, indexName;
   DateTime joinedDate;
   int breakfastIntake = 0, lunchIntake = 0, dinnerIntake = 0, snacksIntake = 0;
+  int breakfastLogbook = 0,
+      lunchLogbook = 0,
+      dinnerLogbook = 0,
+      snacksLogbook = 0;
+
+  List breakfastLogs = [], lunchLogs = [], dinnerLogs = [], snacksLogs = [];
 
   Future<void> fetchIntakes() async {
     // ignore: await_only_futures
@@ -58,6 +65,7 @@ class _HomeState extends State<Home> {
         breakfastIntake += doc['kcal'];
       });
     });
+    breakfastLogbook = breakfastIntake;
     await FirebaseFirestore.instance
         .collection('users')
         .doc(uid)
@@ -71,6 +79,7 @@ class _HomeState extends State<Home> {
         lunchIntake += doc['kcal'];
       });
     });
+    lunchLogbook = lunchIntake;
     await FirebaseFirestore.instance
         .collection('users')
         .doc(uid)
@@ -84,6 +93,7 @@ class _HomeState extends State<Home> {
         dinnerIntake += doc['kcal'];
       });
     });
+    dinnerLogbook = dinnerIntake;
     await FirebaseFirestore.instance
         .collection('users')
         .doc(uid)
@@ -97,11 +107,11 @@ class _HomeState extends State<Home> {
         snacksIntake += doc['kcal'];
       });
     });
+    snacksLogbook = snacksIntake;
     setState(() {});
   }
 
   Future<void> fetchUserData() async {
-    print("fetching");
     // ignore: await_only_futures
     await FirebaseFirestore.instance
         .collection('users')
@@ -126,7 +136,106 @@ class _HomeState extends State<Home> {
         indexName = name.indexOf(" ");
       }
     });
-    print("fetched");
+    setState(() {});
+  }
+
+  Future<void> fetchLogbookIntakes(DateTime date) async {
+    breakfastLogbook = 0;
+    lunchLogbook = 0;
+    dinnerLogbook = 0;
+    snacksLogbook = 0;
+    // ignore: await_only_futures
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(uid)
+        .collection("logbooks")
+        .doc((DateFormat('yyyy-MM-dd').format(date)))
+        .collection("logs")
+        .where('time', isEqualTo: "breakfast")
+        .get()
+        .then((QuerySnapshot querySnapshot) {
+      querySnapshot.docs.forEach((doc) {
+        breakfastLogbook += doc['kcal'];
+      });
+    });
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(uid)
+        .collection("logbooks")
+        .doc((DateFormat('yyyy-MM-dd').format(date)))
+        .collection("logs")
+        .where('time', isEqualTo: "lunch")
+        .get()
+        .then((QuerySnapshot querySnapshot) {
+      querySnapshot.docs.forEach((doc) {
+        lunchLogbook += doc['kcal'];
+      });
+    });
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(uid)
+        .collection("logbooks")
+        .doc((DateFormat('yyyy-MM-dd').format(date)))
+        .collection("logs")
+        .where('time', isEqualTo: "dinner")
+        .get()
+        .then((QuerySnapshot querySnapshot) {
+      querySnapshot.docs.forEach((doc) {
+        dinnerLogbook += doc['kcal'];
+      });
+    });
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(uid)
+        .collection("logbooks")
+        .doc((DateFormat('yyyy-MM-dd').format(date)))
+        .collection("logs")
+        .where('time', isEqualTo: "snacks")
+        .get()
+        .then((QuerySnapshot querySnapshot) {
+      querySnapshot.docs.forEach((doc) {
+        snacksLogbook += doc['kcal'];
+      });
+    });
+  }
+
+  Future<void> fetchLogs(DateTime date) async {
+    QuerySnapshot breakfastSnapshot = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(uid)
+        .collection("logbooks")
+        .doc((DateFormat('yyyy-MM-dd').format(date)))
+        .collection("logs")
+        .where('time', isEqualTo: "breakfast")
+        .get();
+    breakfastLogs = breakfastSnapshot.docs.map((doc) => doc.data()).toList();
+    QuerySnapshot lunchSnapshot = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(uid)
+        .collection("logbooks")
+        .doc((DateFormat('yyyy-MM-dd').format(date)))
+        .collection("logs")
+        .where('time', isEqualTo: "lunch")
+        .get();
+    lunchLogs = lunchSnapshot.docs.map((doc) => doc.data()).toList();
+    QuerySnapshot dinnerSnapshot = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(uid)
+        .collection("logbooks")
+        .doc((DateFormat('yyyy-MM-dd').format(date)))
+        .collection("logs")
+        .where('time', isEqualTo: "dinner")
+        .get();
+    dinnerLogs = dinnerSnapshot.docs.map((doc) => doc.data()).toList();
+    QuerySnapshot snacksSnapshot = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(uid)
+        .collection("logbooks")
+        .doc((DateFormat('yyyy-MM-dd').format(date)))
+        .collection("logs")
+        .where('time', isEqualTo: "snacks")
+        .get();
+    snacksLogs = snacksSnapshot.docs.map((doc) => doc.data()).toList();
     setState(() {});
   }
 
@@ -135,6 +244,7 @@ class _HomeState extends State<Home> {
     initializeDateFormatting();
     fetchUserData();
     fetchIntakes();
+    fetchLogs(DateTime.now());
     super.initState();
     if (widget.index != null) {
       _selectedItemPosition = widget.index;
@@ -143,7 +253,6 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    print('home built');
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
     final List<Widget> _children = [
@@ -627,11 +736,10 @@ class _HomeState extends State<Home> {
               initialDate: _selectedDate,
               firstDate: joinedDate ?? _selectedDate,
               lastDate: DateTime.now().add(Duration(days: 365)),
-              onDateSelected: (date) {
-                setState(() {
-                  _selectedDate = date;
-                  print(_selectedDate);
-                });
+              onDateSelected: (date) async {
+                _selectedDate = date;
+                await fetchLogbookIntakes(_selectedDate);
+                await fetchLogs(_selectedDate);
               },
               leftMargin: 20,
               monthColor: Colors.white70,
@@ -675,7 +783,12 @@ class _HomeState extends State<Home> {
                               color: Colors.amber[400], fontFamily: 'Isidora'),
                         ),
                         Text(
-                          "930 kcal",
+                          (breakfastLogbook +
+                                      lunchLogbook +
+                                      dinnerLogbook +
+                                      snacksLogbook)
+                                  .toString() +
+                              " kcal",
                           style: TextStyle(
                               color: Colors.grey[100], fontFamily: 'Isidora'),
                         )
@@ -718,7 +831,7 @@ class _HomeState extends State<Home> {
                               ),
                             ),
                             Text(
-                              "10 kcal",
+                              "$breakfastLogbook kcal",
                               style: TextStyle(
                                 color: Colors.grey[50],
                                 fontSize: 24,
@@ -729,15 +842,21 @@ class _HomeState extends State<Home> {
                         expanded: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Divider(
-                              color: Colors.grey,
-                              endIndent: 30,
-                            ),
-                            Text(
-                              "Egg - 10 kcal",
-                              style: TextStyle(
-                                color: Colors.grey[50],
-                                fontSize: 12,
+                            Container(
+                              width: width - 40,
+                              height: 20 * breakfastLogs.length.toDouble(),
+                              child: ListView.builder(
+                                physics: NeverScrollableScrollPhysics(),
+                                itemBuilder: (context, index) {
+                                  var log = breakfastLogs[index];
+                                  return Text(
+                                      log['name'] +
+                                          " - " +
+                                          log['kcal'].toString() +
+                                          " kcal",
+                                      style: TextStyle(color: Colors.grey[50]));
+                                },
+                                itemCount: breakfastLogs.length,
                               ),
                             )
                           ],
@@ -778,7 +897,7 @@ class _HomeState extends State<Home> {
                               ),
                             ),
                             Text(
-                              "410 kcal",
+                              "$lunchLogbook kcal",
                               style: TextStyle(
                                 color: Colors.grey[50],
                                 fontSize: 24,
@@ -789,24 +908,23 @@ class _HomeState extends State<Home> {
                         expanded: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Divider(
-                              color: Colors.grey,
-                              endIndent: 30,
-                            ),
-                            Text(
-                              "Fried Rice - 310 kcal",
-                              style: TextStyle(
-                                color: Colors.grey[50],
-                                fontSize: 12,
+                            Container(
+                              width: width - 40,
+                              height: 20 * lunchLogs.length.toDouble(),
+                              child: ListView.builder(
+                                physics: NeverScrollableScrollPhysics(),
+                                itemBuilder: (context, index) {
+                                  var log = lunchLogs[index];
+                                  return Text(
+                                      log['name'] +
+                                          " - " +
+                                          log['kcal'].toString() +
+                                          " kcal",
+                                      style: TextStyle(color: Colors.grey[50]));
+                                },
+                                itemCount: lunchLogs.length,
                               ),
-                            ),
-                            Text(
-                              "Milk - 100 kcal",
-                              style: TextStyle(
-                                color: Colors.grey[50],
-                                fontSize: 12,
-                              ),
-                            ),
+                            )
                           ],
                         ),
                         collapsed: null,
@@ -845,7 +963,7 @@ class _HomeState extends State<Home> {
                               ),
                             ),
                             Text(
-                              "210 kcal",
+                              "$lunchLogbook kcal",
                               style: TextStyle(
                                 color: Colors.grey[50],
                                 fontSize: 24,
@@ -856,15 +974,21 @@ class _HomeState extends State<Home> {
                         expanded: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Divider(
-                              color: Colors.grey,
-                              endIndent: 30,
-                            ),
-                            Text(
-                              "Pizza - 210 kcal",
-                              style: TextStyle(
-                                color: Colors.grey[50],
-                                fontSize: 12,
+                            Container(
+                              width: width - 40,
+                              height: 20 * dinnerLogs.length.toDouble(),
+                              child: ListView.builder(
+                                physics: NeverScrollableScrollPhysics(),
+                                itemBuilder: (context, index) {
+                                  var log = dinnerLogs[index];
+                                  return Text(
+                                      log['name'] +
+                                          " - " +
+                                          log['kcal'].toString() +
+                                          " kcal",
+                                      style: TextStyle(color: Colors.grey[50]));
+                                },
+                                itemCount: dinnerLogs.length,
                               ),
                             )
                           ],
@@ -905,7 +1029,7 @@ class _HomeState extends State<Home> {
                               ),
                             ),
                             Text(
-                              "300 kcal",
+                              "$snacksLogbook kcal",
                               style: TextStyle(
                                 color: Colors.grey[50],
                                 fontSize: 24,
@@ -916,24 +1040,23 @@ class _HomeState extends State<Home> {
                         expanded: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Divider(
-                              color: Colors.grey,
-                              endIndent: 30,
-                            ),
-                            Text(
-                              "Chocolate Chip Cookie - 100 kcal",
-                              style: TextStyle(
-                                color: Colors.grey[50],
-                                fontSize: 12,
+                            Container(
+                              width: width - 40,
+                              height: 20 * snacksLogs.length.toDouble(),
+                              child: ListView.builder(
+                                physics: NeverScrollableScrollPhysics(),
+                                itemBuilder: (context, index) {
+                                  var log = snacksLogs[index];
+                                  return Text(
+                                      log['name'] +
+                                          " - " +
+                                          log['kcal'].toString() +
+                                          " kcal",
+                                      style: TextStyle(color: Colors.grey[50]));
+                                },
+                                itemCount: snacksLogs.length,
                               ),
-                            ),
-                            Text(
-                              "Oreo - 200 kcal",
-                              style: TextStyle(
-                                color: Colors.grey[50],
-                                fontSize: 12,
-                              ),
-                            ),
+                            )
                           ],
                         ),
                         collapsed: null,

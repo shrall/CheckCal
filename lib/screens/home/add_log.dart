@@ -178,7 +178,7 @@ class _AddLogState extends State<AddLog> {
           // ),
         ],
       );
-    } else if (widget.type == 'lunch') {
+    } else if (widget.type == 'snacks') {
       return Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
