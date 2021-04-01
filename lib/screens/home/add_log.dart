@@ -1,3 +1,4 @@
+import 'package:checkcal/screens/wrapper.dart';
 import 'package:checkcal/services/database.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -5,6 +6,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:checkcal/widgets/add_dialog.dart';
 import 'package:intl/intl.dart';
+import 'package:page_transition/page_transition.dart';
 
 Color dark = Color.fromRGBO(13, 7, 20, 1);
 Color gray = Color.fromRGBO(44, 40, 50, 1);
@@ -227,137 +229,151 @@ class _AddLogState extends State<AddLog> {
   @override
   void initState() {
     super.initState();
-    fetchTotalKcal();
+    // fetchTotalKcal();
   }
 
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
-    return SafeArea(
-      child: Scaffold(
-        resizeToAvoidBottomInset: false,
-        backgroundColor: dark,
-        body: Container(
-          width: width,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.all(16),
-                child: getTitle(totalKcal),
+    return WillPopScope(
+      onWillPop: () {
+        Navigator.pushReplacement(
+          context,
+          PageTransition(
+              duration: Duration(milliseconds: 800),
+              child: Wrapper(
+                index: 0,
               ),
-              Divider(
-                color: Colors.grey[400],
-                thickness: 2,
-              ),
-              Expanded(
-                child: StreamBuilder<QuerySnapshot>(
-                  stream: FirebaseFirestore.instance
-                      .collection('users')
-                      .doc(widget.uid)
-                      .collection("logbooks")
-                      .doc((DateFormat('yyyy-MM-dd').format(DateTime.now())))
-                      .collection("logs")
-                      .where('time', isEqualTo: widget.type)
-                      .snapshots(),
-                  builder: (context, snapshot) {
-                    if (!snapshot.hasData) {
-                      return Container(
-                        height: 200.0,
-                        alignment: Alignment.center,
-                        child: CircularProgressIndicator(
-                          valueColor:
-                              AlwaysStoppedAnimation<Color>(Colors.black45),
-                        ),
-                      );
-                    } else {
-                      return ListView.separated(
-                        itemBuilder: (_, index) {
-                          DocumentSnapshot log = snapshot.data.docs[index];
-                          return Slidable(
-                            actionPane: SlidableDrawerActionPane(),
-                            actionExtentRatio: 0.25,
-                            child: Container(
-                              color: dark,
-                              child: ListTile(
-                                leading: log.data()['type'] != "food"
-                                    ? Icon(
-                                        FontAwesomeIcons.mugHot,
-                                        color: Colors.white,
-                                        size: 40,
-                                      )
-                                    : Icon(
-                                        FontAwesomeIcons.hamburger,
-                                        color: Colors.white,
-                                        size: 40,
-                                      ),
-                                title: Text(
-                                  log.data()['name'],
-                                  style: TextStyle(color: Colors.grey[50]),
-                                ),
-                                subtitle: Text(
-                                  log.data()['kcal'].toString() + " kcal",
-                                  style: TextStyle(color: Colors.grey[50]),
-                                ),
-                              ),
-                            ),
-                            secondaryActions: <Widget>[
-                              IconSlideAction(
-                                caption: 'Delete',
-                                color: red,
-                                icon: Icons.delete,
-                                onTap: () async {
-                                  await DatabaseService(uid: widget.uid)
-                                      .deleteLog(log.id, DateTime.now());
-                                  setState(() {});
-                                },
-                              ),
-                            ],
-                          );
-                        },
-                        separatorBuilder: (context, index) {
-                          return Divider(
-                            color: Colors.grey,
-                          );
-                        },
-                        itemCount: snapshot.data.docs.length,
-                      );
-                    }
-                  },
+              type: PageTransitionType.leftToRightWithFade),
+        );
+        return new Future.value(true);
+      },
+      child: SafeArea(
+        child: Scaffold(
+          resizeToAvoidBottomInset: false,
+          backgroundColor: dark,
+          body: Container(
+            width: width,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: getTitle(totalKcal),
                 ),
-              ),
-            ],
+                Divider(
+                  color: Colors.grey[400],
+                  thickness: 2,
+                ),
+                Expanded(
+                  child: StreamBuilder<QuerySnapshot>(
+                    stream: FirebaseFirestore.instance
+                        .collection('users')
+                        .doc(widget.uid)
+                        .collection("logbooks")
+                        .doc((DateFormat('yyyy-MM-dd').format(DateTime.now())))
+                        .collection("logs")
+                        .where('time', isEqualTo: widget.type)
+                        .snapshots(),
+                    builder: (context, snapshot) {
+                      if (!snapshot.hasData) {
+                        return Container(
+                          height: 200.0,
+                          alignment: Alignment.center,
+                          child: CircularProgressIndicator(
+                            valueColor:
+                                AlwaysStoppedAnimation<Color>(Colors.black45),
+                          ),
+                        );
+                      } else {
+                        return ListView.separated(
+                          itemBuilder: (_, index) {
+                            DocumentSnapshot log = snapshot.data.docs[index];
+                            return Slidable(
+                              actionPane: SlidableDrawerActionPane(),
+                              actionExtentRatio: 0.25,
+                              child: Container(
+                                color: dark,
+                                child: ListTile(
+                                  leading: log.data()['type'] != "food"
+                                      ? Icon(
+                                          FontAwesomeIcons.mugHot,
+                                          color: Colors.white,
+                                          size: 40,
+                                        )
+                                      : Icon(
+                                          FontAwesomeIcons.hamburger,
+                                          color: Colors.white,
+                                          size: 40,
+                                        ),
+                                  title: Text(
+                                    log.data()['name'],
+                                    style: TextStyle(color: Colors.grey[50]),
+                                  ),
+                                  subtitle: Text(
+                                    log.data()['kcal'].toString() + " kcal",
+                                    style: TextStyle(color: Colors.grey[50]),
+                                  ),
+                                ),
+                              ),
+                              secondaryActions: <Widget>[
+                                IconSlideAction(
+                                  caption: 'Delete',
+                                  color: red,
+                                  icon: Icons.delete,
+                                  onTap: () async {
+                                    await DatabaseService(uid: widget.uid)
+                                        .deleteLog(log.id, DateTime.now());
+                                    setState(() {});
+                                  },
+                                ),
+                              ],
+                            );
+                          },
+                          separatorBuilder: (context, index) {
+                            return Divider(
+                              color: Colors.grey,
+                            );
+                          },
+                          itemCount: snapshot.data.docs.length,
+                        );
+                      }
+                    },
+                  ),
+                ),
+              ],
+            ),
           ),
-        ),
-        floatingActionButton: Align(
-          alignment: Alignment.bottomRight,
-          child: FloatingActionButton.extended(
-            heroTag: 'addButton',
-            onPressed: () {
-              showDialog(
-                context: context,
-                builder: (context) => AddDialog(
-                  title: 'Add new log.',
-                  submitButton: 'Submit',
-                  onCancelled: () => print('cancelled'),
-                  onSubmitted: (response) async {
-                    await DatabaseService(uid: widget.uid).addLog(
-                        response.name,
-                        response.kcal,
-                        widget.type,
-                        response.type,
-                        DateTime.now());
-                    setState(() {});
-                  },
-                ),
-              );
-            },
-            label: Text("Add Log.",
-                style: TextStyle(
-                    color: Colors.grey[50], fontWeight: FontWeight.bold)),
-            icon: Icon(FontAwesomeIcons.plus),
-            backgroundColor: gray,
-            foregroundColor: Colors.grey[50],
+          floatingActionButton: Align(
+            alignment: Alignment.bottomRight,
+            child: FloatingActionButton.extended(
+              heroTag: 'addButton',
+              onPressed: () {
+                showDialog(
+                  context: context,
+                  builder: (context) => AddDialog(
+                    title: 'Add new log.',
+                    submitButton: 'Submit',
+                    onCancelled: () => print('cancelled'),
+                    onSubmitted: (response) async {
+                      await DatabaseService(uid: widget.uid).addLog(
+                          response.name,
+                          response.kcal,
+                          widget.type,
+                          response.type,
+                          DateTime.now());
+                      setState(() {});
+                    },
+                  ),
+                );
+              },
+              label: Text("Add Log.",
+                  style: TextStyle(
+                      color: Colors.grey[50], fontWeight: FontWeight.bold)),
+              icon: Icon(FontAwesomeIcons.plus),
+              backgroundColor: gray,
+              foregroundColor: Colors.grey[50],
+            ),
           ),
         ),
       ),

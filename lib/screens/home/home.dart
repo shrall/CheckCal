@@ -41,7 +41,66 @@ class _HomeState extends State<Home> {
   String name = "", imgUrl;
   int limit, indexName;
   DateTime joinedDate;
-  void fetchUserData() async {
+  int breakfastIntake = 0, lunchIntake = 0, dinnerIntake = 0, snacksIntake = 0;
+
+  Future<void> fetchIntakes() async {
+    // ignore: await_only_futures
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(uid)
+        .collection("logbooks")
+        .doc((DateFormat('yyyy-MM-dd').format(DateTime.now())))
+        .collection("logs")
+        .where('time', isEqualTo: "breakfast")
+        .get()
+        .then((QuerySnapshot querySnapshot) {
+      querySnapshot.docs.forEach((doc) {
+        breakfastIntake += doc['kcal'];
+      });
+    });
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(uid)
+        .collection("logbooks")
+        .doc((DateFormat('yyyy-MM-dd').format(DateTime.now())))
+        .collection("logs")
+        .where('time', isEqualTo: "lunch")
+        .get()
+        .then((QuerySnapshot querySnapshot) {
+      querySnapshot.docs.forEach((doc) {
+        lunchIntake += doc['kcal'];
+      });
+    });
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(uid)
+        .collection("logbooks")
+        .doc((DateFormat('yyyy-MM-dd').format(DateTime.now())))
+        .collection("logs")
+        .where('time', isEqualTo: "dinner")
+        .get()
+        .then((QuerySnapshot querySnapshot) {
+      querySnapshot.docs.forEach((doc) {
+        dinnerIntake += doc['kcal'];
+      });
+    });
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(uid)
+        .collection("logbooks")
+        .doc((DateFormat('yyyy-MM-dd').format(DateTime.now())))
+        .collection("logs")
+        .where('time', isEqualTo: "snacks")
+        .get()
+        .then((QuerySnapshot querySnapshot) {
+      querySnapshot.docs.forEach((doc) {
+        snacksIntake += doc['kcal'];
+      });
+    });
+    setState(() {});
+  }
+
+  Future<void> fetchUserData() async {
     print("fetching");
     // ignore: await_only_futures
     await FirebaseFirestore.instance
@@ -73,9 +132,10 @@ class _HomeState extends State<Home> {
 
   @override
   void initState() {
-    super.initState();
     initializeDateFormatting();
     fetchUserData();
+    fetchIntakes();
+    super.initState();
     if (widget.index != null) {
       _selectedItemPosition = widget.index;
     }
@@ -151,7 +211,12 @@ class _HomeState extends State<Home> {
                               color: Colors.amber[400], fontFamily: 'Isidora'),
                         ),
                         Text(
-                          "10 kcal",
+                          (breakfastIntake +
+                                      lunchIntake +
+                                      dinnerIntake +
+                                      snacksIntake)
+                                  .toString() +
+                              " kcal",
                           style: TextStyle(
                               color: Colors.grey[100], fontFamily: 'Isidora'),
                         )
@@ -258,7 +323,7 @@ class _HomeState extends State<Home> {
                                     ),
                                   ),
                                   Text(
-                                    '10 kcal',
+                                    "$snacksIntake kcal",
                                     style: TextStyle(
                                       color: meat,
                                       fontSize: 20,
@@ -282,8 +347,9 @@ class _HomeState extends State<Home> {
                     height: 155,
                     decoration: BoxDecoration(
                       color: dark,
-                      borderRadius:
-                          BorderRadius.only(bottomRight: Radius.circular(25)),
+                      borderRadius: BorderRadius.only(
+                        bottomRight: Radius.circular(25),
+                      ),
                     ),
                   ),
                 ),
@@ -344,7 +410,7 @@ class _HomeState extends State<Home> {
                                     ),
                                   ),
                                   Text(
-                                    '0 kcal',
+                                    "$dinnerIntake kcal",
                                     style: TextStyle(
                                       color: lettuce,
                                       fontSize: 20,
@@ -431,7 +497,7 @@ class _HomeState extends State<Home> {
                                     ),
                                   ),
                                   Text(
-                                    '0 kcal',
+                                    "$lunchIntake kcal",
                                     style: TextStyle(
                                       color: ketchup,
                                       fontSize: 20,
@@ -520,7 +586,7 @@ class _HomeState extends State<Home> {
                                     ),
                                   ),
                                   Text(
-                                    '0 kcal',
+                                    "$breakfastIntake kcal",
                                     style: TextStyle(
                                       color: bun,
                                       fontSize: 20,
