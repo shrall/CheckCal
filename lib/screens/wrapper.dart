@@ -8,7 +8,7 @@ import 'package:provider/provider.dart';
 
 // ignore: must_be_immutable
 class Wrapper extends StatelessWidget {
-  final int index;
+  int index;
   final String email;
   final String password;
   Wrapper({this.index, this.email, this.password});
@@ -38,6 +38,11 @@ class Wrapper extends StatelessWidget {
       print('gohome');
       print(index.toString());
       signOut += 1;
+      if (email != null) {
+        print(email);
+        index = 0;
+      }
+      print(index.toString());
       return Home(
         index: index,
       );

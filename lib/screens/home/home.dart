@@ -1146,7 +1146,12 @@ class _HomeState extends State<Home> {
                     width: 12,
                   ),
                   Text(
-                    '10 Kcal',
+                    (breakfastIntake +
+                                lunchIntake +
+                                dinnerIntake +
+                                snacksIntake)
+                            .toString() +
+                        " kcal",
                     style: TextStyle(
                         fontFamily: 'Isidora',
                         color: Colors.grey[50],

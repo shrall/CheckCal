@@ -338,6 +338,7 @@ class _EditProfileState extends State<EditProfile> {
                               duration: Duration(milliseconds: 800),
                               child: Wrapper(
                                 index: 2,
+                                email: null,
                               ),
                               type: PageTransitionType.leftToRightWithFade),
                         );
