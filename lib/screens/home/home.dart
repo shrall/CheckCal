@@ -1,6 +1,7 @@
 import 'package:checkcal/screens/home/add_log.dart';
 import 'package:checkcal/screens/wrapper.dart';
 import 'package:checkcal/services/auth.dart';
+import 'package:checkcal/widgets/warning_dialog.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -47,6 +48,7 @@ class _HomeState extends State<Home> {
       lunchLogbook = 0,
       dinnerLogbook = 0,
       snacksLogbook = 0;
+  int warningCounter = 0;
 
   List breakfastLogs = [], lunchLogs = [], dinnerLogs = [], snacksLogs = [];
 
@@ -381,18 +383,42 @@ class _HomeState extends State<Home> {
                     ),
                     child: InkWell(
                       onTap: () {
-                        print(uid);
-                        Navigator.push(
-                          context,
-                          PageTransition(
-                            duration: Duration(milliseconds: 800),
-                            child: AddLog(
-                              uid: uid,
-                              type: "snacks",
+                        if (breakfastIntake +
+                                    lunchIntake +
+                                    dinnerIntake +
+                                    snacksIntake >=
+                                limit &&
+                            warningCounter == 0) {
+                          showDialog(
+                              context: context,
+                              builder: (context) => WarningDialog(
+                                    title: 'Intake Limit Reached.',
+                                    message:
+                                        'Remember that your daily intake limit is ' +
+                                            limit.toString() +
+                                            ".",
+                                    icon: Icon(
+                                      FontAwesomeIcons.exclamationTriangle,
+                                      color: red,
+                                      size: 80,
+                                    ),
+                                    submitButton: 'Okay',
+                                    onCancelled: () => warningCounter++,
+                                    onSubmitted: () => warningCounter++,
+                                  ));
+                        } else {
+                          Navigator.push(
+                            context,
+                            PageTransition(
+                              duration: Duration(milliseconds: 800),
+                              child: AddLog(
+                                uid: uid,
+                                type: "snacks",
+                              ),
+                              type: PageTransitionType.rightToLeftWithFade,
                             ),
-                            type: PageTransitionType.rightToLeftWithFade,
-                          ),
-                        );
+                          );
+                        }
                       },
                       child: Container(
                         padding: EdgeInsets.symmetric(horizontal: 35),
@@ -471,17 +497,42 @@ class _HomeState extends State<Home> {
                     ),
                     child: InkWell(
                       onTap: () {
-                        Navigator.push(
-                          context,
-                          PageTransition(
-                            duration: Duration(milliseconds: 800),
-                            child: AddLog(
-                              uid: uid,
-                              type: "dinner",
+                        if (breakfastIntake +
+                                    lunchIntake +
+                                    dinnerIntake +
+                                    snacksIntake >=
+                                limit &&
+                            warningCounter == 0) {
+                          showDialog(
+                              context: context,
+                              builder: (context) => WarningDialog(
+                                    title: 'Intake Limit Reached.',
+                                    message:
+                                        'Remember that your daily intake limit is ' +
+                                            limit.toString() +
+                                            ".",
+                                    icon: Icon(
+                                      FontAwesomeIcons.exclamationTriangle,
+                                      color: red,
+                                      size: 80,
+                                    ),
+                                    submitButton: 'Okay',
+                                    onCancelled: () => warningCounter++,
+                                    onSubmitted: () => warningCounter++,
+                                  ));
+                        } else {
+                          Navigator.push(
+                            context,
+                            PageTransition(
+                              duration: Duration(milliseconds: 800),
+                              child: AddLog(
+                                uid: uid,
+                                type: "dinner",
+                              ),
+                              type: PageTransitionType.rightToLeftWithFade,
                             ),
-                            type: PageTransitionType.rightToLeftWithFade,
-                          ),
-                        );
+                          );
+                        }
                       },
                       child: Container(
                         padding: EdgeInsets.symmetric(horizontal: 35),
@@ -557,17 +608,42 @@ class _HomeState extends State<Home> {
                     ),
                     child: InkWell(
                       onTap: () {
-                        Navigator.push(
-                          context,
-                          PageTransition(
-                            duration: Duration(milliseconds: 800),
-                            child: AddLog(
-                              uid: uid,
-                              type: "lunch",
+                        if (breakfastIntake +
+                                    lunchIntake +
+                                    dinnerIntake +
+                                    snacksIntake >=
+                                limit &&
+                            warningCounter == 0) {
+                          showDialog(
+                              context: context,
+                              builder: (context) => WarningDialog(
+                                    title: 'Intake Limit Reached.',
+                                    message:
+                                        'Remember that your daily intake limit is ' +
+                                            limit.toString() +
+                                            ".",
+                                    icon: Icon(
+                                      FontAwesomeIcons.exclamationTriangle,
+                                      color: red,
+                                      size: 80,
+                                    ),
+                                    submitButton: 'Okay',
+                                    onCancelled: () => warningCounter++,
+                                    onSubmitted: () => warningCounter++,
+                                  ));
+                        } else {
+                          Navigator.push(
+                            context,
+                            PageTransition(
+                              duration: Duration(milliseconds: 800),
+                              child: AddLog(
+                                uid: uid,
+                                type: "lunch",
+                              ),
+                              type: PageTransitionType.rightToLeftWithFade,
                             ),
-                            type: PageTransitionType.rightToLeftWithFade,
-                          ),
-                        );
+                          );
+                        }
                       },
                       child: Container(
                         padding: EdgeInsets.symmetric(horizontal: 35),
@@ -645,17 +721,42 @@ class _HomeState extends State<Home> {
                     ),
                     child: InkWell(
                       onTap: () {
-                        Navigator.push(
-                          context,
-                          PageTransition(
-                            duration: Duration(milliseconds: 800),
-                            child: AddLog(
-                              uid: uid,
-                              type: "breakfast",
+                        if (breakfastIntake +
+                                    lunchIntake +
+                                    dinnerIntake +
+                                    snacksIntake >=
+                                limit &&
+                            warningCounter == 0) {
+                          showDialog(
+                              context: context,
+                              builder: (context) => WarningDialog(
+                                    title: 'Intake Limit Reached.',
+                                    message:
+                                        'Remember that your daily intake limit is ' +
+                                            limit.toString() +
+                                            ".",
+                                    icon: Icon(
+                                      FontAwesomeIcons.exclamationTriangle,
+                                      color: red,
+                                      size: 80,
+                                    ),
+                                    submitButton: 'Okay',
+                                    onCancelled: () => warningCounter++,
+                                    onSubmitted: () => warningCounter++,
+                                  ));
+                        } else {
+                          Navigator.push(
+                            context,
+                            PageTransition(
+                              duration: Duration(milliseconds: 800),
+                              child: AddLog(
+                                uid: uid,
+                                type: "breakfast",
+                              ),
+                              type: PageTransitionType.rightToLeftWithFade,
                             ),
-                            type: PageTransitionType.rightToLeftWithFade,
-                          ),
-                        );
+                          );
+                        }
                       },
                       child: Container(
                         padding: EdgeInsets.symmetric(horizontal: 35),
